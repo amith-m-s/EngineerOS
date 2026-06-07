@@ -1,0 +1,109 @@
+groups:
+  - name: engineeros_alerts
+    interval: 30s
+    
+    rules:
+      # Availability alerts
+      - alert: HighErrorRate
+        expr: |
+          (rate(engineeros_errors_total[5m]) > 0.01)
+        for: 5m
+        labels:
+          severity: warning
+          component: api
+        annotations:
+          summary: "High error rate detected"
+          description: "Error rate is {{ $value | humanizePercentage }} (threshold: 1%)"
+      
+      - alert: CriticalErrorRate
+        expr: |
+          (rate(engineeros_errors_total[5m]) > 0.05)
+        for: 2m
+        labels:
+          severity: critical
+          component: api
+        annotations:
+          summary: "Critical error rate detected"
+          description: "Error rate is {{ $value | humanizePercentage }} (threshold: 5%)"
+      
+      # Latency alerts
+      - alert: HighAPILatency
+        expr: |
+          (histogram_quantile(0.95, rate(engineeros_request_duration_seconds_bucket[5m])) > 0.5)
+        for: 5m
+        labels:
+          severity: warning
+          component: api
+        annotations:
+          summary: "High API latency detected"
+          description: "p95 latency is {{ $value | humanizeDuration }} (threshold: 500ms)"
+      
+      - alert: CriticalAPILatency
+        expr: |
+          (histogram_quantile(0.95, rate(engineeros_request_duration_seconds_bucket[5m])) > 2)
+        for: 2m
+        labels:
+          severity: critical
+          component: api
+        annotations:
+          summary: "Critical API latency detected"
+          description: "p95 latency is {{ $value | humanizeDuration }} (threshold: 2s)"
+      
+      # Database alerts
+      - alert: DatabaseSlowQueries
+        expr: |
+          (histogram_quantile(0.95, rate(engineeros_db_query_duration_seconds_bucket[5m])) > 0.5)
+        for: 5m
+        labels:
+          severity: warning
+          component: database
+        annotations:
+          summary: "Slow database queries detected"
+          description: "p95 query time is {{ $value | humanizeDuration }} (threshold: 500ms)"
+      
+      # Authentication alerts
+      - alert: HighAuthFailureRate
+        expr: |
+          (rate(engineeros_login_attempts_total{result="failure"}[5m]) / rate(engineeros_login_attempts_total[5m]) > 0.2)
+        for: 5m
+        labels:
+          severity: warning
+          component: authentication
+        annotations:
+          summary: "High authentication failure rate"
+          description: "{{ $value | humanizePercentage }} of login attempts failing (threshold: 20%)"
+      
+      # Test coverage alerts
+      - alert: LowTestCoverage
+        expr: |
+          (engineeros_test_coverage_percent < 70)
+        for: 10m
+        labels:
+          severity: warning
+          component: testing
+        annotations:
+          summary: "Test coverage below target"
+          description: "Coverage is {{ $value }}% (target: 70%)"
+      
+      # SLO breach alerts
+      - alert: SLOBreach_Availability
+        expr: |
+          (rate(engineeros_requests_total{status=~"[45].."}[1h]) / rate(engineeros_requests_total[1h]) > 0.001)
+        for: 15m
+        labels:
+          severity: critical
+          slo: availability
+        annotations:
+          summary: "Availability SLO breach"
+          description: "Error rate is {{ $value | humanizePercentage }} (target: 0.1%)"
+      
+      - alert: SLOBreach_ResponseTime
+        expr: |
+          (histogram_quantile(0.95, rate(engineeros_request_duration_seconds_bucket[1h])) > 0.2)
+        for: 15m
+        labels:
+          severity: warning
+          slo: latency
+        annotations:
+          summary: "Response time SLO breach"
+          description: "p95 response time is {{ $value | humanizeDuration }} (target: 200ms)"

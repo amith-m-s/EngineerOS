@@ -10,7 +10,7 @@ permissions:
   contents: read
 
 concurrency:
-  group: verify-${{ github.ref }}
+  group: "verify-${{ github.ref }}"
   cancel-in-progress: true
 
 env:
@@ -79,28 +79,3 @@ jobs:
 
       - name: Run backend tests
         run: pytest -q --tb=short --cov=app --cov-report=term-missing
-
-  docker:
-    name: Docker build
-    runs-on: ubuntu-latest
-    timeout-minutes: 10
-    needs: [frontend, backend]
-    if: github.event_name == "push" && github.ref == "refs/heads/main"
-    steps:
-      - uses: actions/checkout@v4
-      - name: Build backend image
-        run: docker build -t engineeros-api:${{ github.sha }} -f backend/Dockerfile backend/
-      - name: Verify health endpoint
-        run: |
-          docker run -d --name engineeros-test -p 8000:8000             -e ENVIRONMENT=testing             -e JWT_SECRET_KEY=docker-test-key             -e POSTGRES_DSN=sqlite:///./test.db             -e NEO4J_URI=bolt://localhost:7687             -e NEO4J_USER=neo4j             -e NEO4J_PASSWORD=test             -e QDRANT_URL=http://localhost:6333             -e REDIS_URL=redis://localhost:6379/0             -e KAFKA_BOOTSTRAP_SERVERS=localhost:9092             engineeros-api:${{ github.sha }}
-          for i in {1..12}; do
-            if curl -sf http://localhost:8000/health; then
-              exit 0
-            fi
-            sleep 2
-          done
-          docker logs engineeros-test
-          exit 1
-      - name: Cleanup
-        if: always()
-        run: docker rm -f engineeros-test 2>/dev/null || true

@@ -122,17 +122,17 @@ jobs:
 
       - name: Check Python formatting
         run: |
-          black --check backend/app backend/tests || echo "Run: black backend/"
+          black --check backend/app backend/tests
 
       - name: Lint Python code
         run: |
-          ruff check backend/app backend/tests --fix || true
+          ruff check backend/app backend/tests
 
       - name: Install frontend dependencies
         run: npm install
 
       - name: Check frontend formatting
-        run: npm run format -- --check || echo "Run: npm run format"
+        run: npm run format:check
 
   # Security Scanning
   security:
@@ -151,7 +151,7 @@ jobs:
 
       - name: Scan Python for security issues
         run: |
-          bandit -r backend/app -v || true
+          bandit -r backend/app -q
 
       - name: Check Python dependencies
         run: |
@@ -169,7 +169,7 @@ jobs:
 
       - name: Check npm dependencies
         run: |
-          npm audit --audit-level=moderate || true
+          npm audit --audit-level=high
 
   # Build Docker Images
   build:

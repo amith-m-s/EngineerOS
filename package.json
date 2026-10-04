@@ -15,7 +15,8 @@
     "test:ui": "vitest --ui",
     "e2e": "playwright test",
     "e2e:debug": "playwright test --debug",
-    "format": "prettier --write . --ignore-path .gitignore"
+    "format": "prettier --write . --ignore-path .gitignore",
+    "format:check": "prettier --check . --ignore-path .gitignore"
   },
   "dependencies": {
     "@react-three/fiber": "^9.0.0",

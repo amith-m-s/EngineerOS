@@ -1,5 +1,6 @@
 import tseslint from "@typescript-eslint/eslint-plugin";
 import tsParser from "@typescript-eslint/parser";
+import tseslint from "typescript-eslint";
 import nextPlugin from "@next/eslint-plugin-next";
 import { defineConfig, globalIgnores } from "eslint/config";
 
@@ -28,6 +29,7 @@ export default defineConfig([
       "@next/next": nextPlugin,
     },
     rules: {
+      ...tseslint.configs.recommended.rules,
       ...tseslint.configs.recommended.rules,
       ...nextPlugin.configs.recommended.rules,
       ...nextPlugin.configs["core-web-vitals"].rules,

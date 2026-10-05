@@ -14,7 +14,6 @@
 import { useCallback, useEffect, useState } from "react";
 import {
   auth as authAPI,
-  getAccessToken,
   setAccessToken,
   type AuthResponse,
 } from "../lib/api";
@@ -60,17 +59,6 @@ function persistUser(user: User | null): void {
     localStorage.setItem(USER_STORAGE_KEY, JSON.stringify(user));
   } else {
     localStorage.removeItem(USER_STORAGE_KEY);
-  }
-}
-
-function hydrateUser(): User | null {
-  if (typeof window === "undefined") return null;
-  try {
-    const stored = localStorage.getItem(USER_STORAGE_KEY);
-    if (!stored) return null;
-    return JSON.parse(stored) as User;
-  } catch {
-    return null;
   }
 }
 

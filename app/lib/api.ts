@@ -89,8 +89,8 @@ export interface Simulation {
   scenario: string;
   difficulty?: string;
   status?: string;
-  agents?: any[];
-  stakeholders?: any[];
+  agents?: Record<string, unknown>[];
+  stakeholders?: Record<string, unknown>[];
   requirements?: string[];
   constraints?: string[];
   failures?: string[];

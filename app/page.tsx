@@ -282,7 +282,7 @@ function AuthConsole() {
 }
 
 export default function Home() {
-  const { user, isAuthenticated, logout, isLoading: authLoading } = useAuth();
+  const { user, isAuthenticated, isLoading: authLoading } = useAuth();
 
   const [activeSection, setActiveSection] = useState("twin");
   const [simulationIndex, setSimulationIndex] = useState(0);

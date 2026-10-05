@@ -1,17 +1,15 @@
-import js from "@eslint/js";
-import tseslint from "typescript-eslint";
 import nextPlugin from "@next/eslint-plugin-next";
 import { defineConfig, globalIgnores } from "eslint/config";
+import tsParser from "@typescript-eslint/parser";
 
 export default defineConfig([
-  js.configs.recommended,
-  ...tseslint.configs.recommended,
   {
     files: ["**/*.{js,jsx,ts,tsx}"],
     languageOptions: {
-      parser: tseslint.parser,
+      parser: tsParser,
       parserOptions: {
-        projectService: true,
+        ecmaVersion: "latest",
+        sourceType: "module",
       },
     },
     plugins: {

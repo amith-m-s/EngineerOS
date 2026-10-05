@@ -71,7 +71,7 @@ test.describe('Authentication E2E', () => {
 })
 
 test.describe('API Endpoints E2E', () => {
-  test('should access authenticated endpoints', async ({ page, authenticatedAPI }) => {
+  test('should access authenticated endpoints', async ({ authenticatedAPI }) => {
     // Test accessing endpoints that require authentication
     const response = await authenticatedAPI.get('/dev/me')
     expect(response.ok()).toBeTruthy()
@@ -82,7 +82,7 @@ test.describe('API Endpoints E2E', () => {
     expect(data).toHaveProperty('roles')
   })
 
-  test('should get twin data', async ({ page, authenticatedAPI }) => {
+  test('should get twin data', async ({ authenticatedAPI }) => {
     const response = await authenticatedAPI.get('/twin/demo_user')
     expect(response.ok()).toBeTruthy()
     
@@ -91,7 +91,7 @@ test.describe('API Endpoints E2E', () => {
     expect(data).toHaveProperty('skill_scores')
   })
 
-  test('should create simulation', async ({ page, authenticatedAPI }) => {
+  test('should create simulation', async ({ authenticatedAPI }) => {
     const response = await authenticatedAPI.post('/simulations', {
       user_id: 'demo_user',
       title: 'Test Simulation',

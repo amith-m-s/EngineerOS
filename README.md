@@ -1,5 +1,6 @@
 
 ## Repository Health
+[![CodeQL](https://github.com/amith-m-s/EngineerOS/actions/workflows/codeql.yml/badge.svg)](https://github.com/amith-m-s/EngineerOS/actions/workflows/codeql.yml)
 
 [![CI](https://github.com/amith-m-s/EngineerOS/actions/workflows/ci.yml/badge.svg)](https://github.com/amith-m-s/EngineerOS/actions/workflows/ci.yml)
 [![License](https://img.shields.io/github/license/amith-m-s/EngineerOS)](https://github.com/amith-m-s/EngineerOS)

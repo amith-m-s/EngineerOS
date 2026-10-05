@@ -1,3 +1,14 @@
+
+## Repository Health
+
+[![CI](https://github.com/amith-m-s/EngineerOS/actions/workflows/ci.yml/badge.svg)](https://github.com/amith-m-s/EngineerOS/actions/workflows/ci.yml)
+[![License](https://img.shields.io/github/license/amith-m-s/EngineerOS)](https://github.com/amith-m-s/EngineerOS)
+[![Last Commit](https://img.shields.io/github/last-commit/amith-m-s/EngineerOS)](https://github.com/amith-m-s/EngineerOS/commits/main)
+[![Code Size](https://img.shields.io/github/languages/code-size/amith-m-s/EngineerOS)](https://github.com/amith-m-s/EngineerOS)
+[![Top Language](https://img.shields.io/github/languages/top/amith-m-s/EngineerOS)](https://github.com/amith-m-s/EngineerOS)
+[![Issues](https://img.shields.io/github/issues/amith-m-s/EngineerOS)](https://github.com/amith-m-s/EngineerOS/issues)
+[![Stars](https://img.shields.io/github/stars/amith-m-s/EngineerOS?style=social)](https://github.com/amith-m-s/EngineerOS/stargazers)
+
 # EngineerOS
 
 **Simulation-driven engineering command cockpit for practicing system design, incident response, and technical decision making.**

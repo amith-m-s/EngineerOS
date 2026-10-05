@@ -4,10 +4,7 @@ import nextTs from "eslint-config-next/typescript";
 
 export default defineConfig([
   {
-    extends: [...nextVitals],
-  },
-  {
-    extends: [...nextTs],
+    extends: [nextVitals, nextTs],
   },
   globalIgnores([
     ".next/**",

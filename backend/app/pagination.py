@@ -40,7 +40,14 @@ class PaginatedResponse(BaseModel, Generic[T]):
         page: int,
         limit: int,
     ) -> "PaginatedResponse[T]":
-        """Create paginated response."""
+        """Create a response after validating pagination values."""
+        if total < 0:
+            raise ValueError("total must be non-negative")
+        if page < 1:
+            raise ValueError("page must be at least 1")
+        if limit < 1:
+            raise ValueError("limit must be at least 1")
+
         pages = (total + limit - 1) // limit  # Ceiling division
         return cls(
             items=items,

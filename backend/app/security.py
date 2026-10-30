@@ -42,12 +42,18 @@ async def get_current_user(
 async def get_current_user_optional(
     credentials: Optional[HTTPAuthorizationCredentials] = Depends(security),
 ) -> Optional[TokenData]:
-    """Dependency to get optional authenticated user from JWT token."""
+    """Return no user only when credentials are absent; reject invalid tokens."""
     if credentials is None:
         return None
 
-    token = credentials.credentials
-    token_data = decode_access_token(token)
+    token_data = decode_access_token(credentials.credentials)
+    if token_data is None:
+        raise HTTPException(
+            status_code=status.HTTP_401_UNAUTHORIZED,
+            detail="Invalid or expired token",
+            headers={"WWW-Authenticate": "Bearer"},
+        )
+
     return token_data
 
 

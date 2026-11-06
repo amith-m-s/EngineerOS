@@ -20,6 +20,7 @@ correlation_id_var: contextvars.ContextVar[str] = contextvars.ContextVar(
 )
 
 HEADER_NAME = "X-Correlation-ID"
+MAX_CORRELATION_ID_LENGTH = 128
 
 
 def get_correlation_id() -> str:
@@ -27,12 +28,22 @@ def get_correlation_id() -> str:
     return correlation_id_var.get()
 
 
+def _validated_correlation_id(value: str | None) -> str:
+    """Accept bounded visible-ASCII IDs; replace malformed values with a UUID."""
+    if value and len(value) <= MAX_CORRELATION_ID_LENGTH and all(
+        0x21 <= ord(character) <= 0x7E for character in value
+    ):
+        return value
+
+    return str(uuid4())
+
+
 class CorrelationIdMiddleware(BaseHTTPMiddleware):
     """Middleware that manages correlation IDs for request tracing."""
 
     async def dispatch(self, request: Request, call_next) -> Response:
-        # Use incoming header if present, otherwise generate a new one
-        cid = request.headers.get(HEADER_NAME, str(uuid4()))
+        # Do not reflect unbounded or non-printable client input into responses/logs.
+        cid = _validated_correlation_id(request.headers.get(HEADER_NAME))
         token = correlation_id_var.set(cid)
 
         try:

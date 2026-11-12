@@ -2,6 +2,7 @@
 
 import pytest
 from datetime import UTC, datetime, timedelta
+from jose import jwt
 
 from app.auth import (
     AccessToken,
@@ -142,6 +143,38 @@ class TestTokenDecoding:
         """Test decoding malformed token returns None."""
         decoded = decode_access_token("not.valid.jwt")
         assert decoded is None
+
+    @pytest.mark.parametrize(
+        "claims",
+        [
+            {"user_id": 123, "email": "test@example.com", "roles": ["engineer"]},
+            {"user_id": "test_user", "email": 123, "roles": ["engineer"]},
+            {"user_id": "test_user", "email": "test@example.com", "roles": "admin"},
+            {"user_id": "test_user", "email": "test@example.com", "roles": ["admin", 1]},
+        ],
+        ids=[
+            "numeric-user-id",
+            "numeric-email",
+            "roles-not-a-list",
+            "non-string-role",
+        ],
+    )
+    def test_decode_access_token_rejects_invalid_claim_types(self, claims):
+        """Treat correctly signed tokens with malformed claims as invalid."""
+        now = datetime.now(UTC)
+        payload = {
+            **claims,
+            "exp": now + timedelta(minutes=5),
+            "iat": now,
+        }
+        settings = get_settings()
+        token = jwt.encode(
+            payload,
+            settings.jwt_secret_key,
+            algorithm=settings.jwt_algorithm,
+        )
+
+        assert decode_access_token(token) is None
 
     def test_token_data_structure(self):
         """Test TokenData model validation."""
